@@ -39,6 +39,8 @@ public class APIClient {
 
 	public static DefaultHttpClient httpClient = new DefaultHttpClient();
 
+	private static String articleDirectory = "C:\\articles\\";
+
 	public static void main(String args[]) throws ClientProtocolException,
 			IOException {
 		String[] queryTerms = "crude oil gasoline gas pump fuel exxon chevron texaco shell bp lukos statoil transocean offshore drilling spill petroleum ship refinery diesel light sweet brent hurricane tropical storm".split(" ");
@@ -143,14 +145,14 @@ public class APIClient {
 		
 		Date currentTime = new Date();
 		
-		File dir = new File("C:\\articles\\" + currentTime.getTime());
+		File dir = new File(articleDirectory + currentTime.getTime());
 		dir.mkdir();
 		
 		for (String url : urls) {
 			String article = downloadArticle(url);
 			String articleName = url.substring(0, url.length() - 2);
 			articleName = articleName.substring(articleName.lastIndexOf("/") + 1).replaceAll("[?]", "_");
-			OutputStream out = new FileOutputStream("C:\\articles\\" + currentTime.getTime() + "\\" + articleName + ".html");
+			OutputStream out = new FileOutputStream(articleDirectory + currentTime.getTime() + "\\" + articleName + ".html");
 			IOUtils.write(article, out);
 		}
 	}
