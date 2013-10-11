@@ -11,8 +11,6 @@ import java.util.Set;
 
 public class TimeSeriesFileLoader extends FileLoader<TimeSeries<Integer, Double>> {
 
-    public final static int MS_IN_DAY = 60 * 60 * 24 * 1000;
-
     public Set<String> getAllSeriesNames() {
         Set<String> names = new HashSet<String>();
 
@@ -44,8 +42,7 @@ public class TimeSeriesFileLoader extends FileLoader<TimeSeries<Integer, Double>
 
 
     @Override
-    protected TimeSeries<Integer, Double> parseFile_(String query, File file) throws IOException {
-        InputStream stream = new FileInputStream(file);
+    protected TimeSeries<Integer, Double> parseFile_(String query, String path, FileInputStream stream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line;
         int lineNumber = 0;
@@ -64,11 +61,11 @@ public class TimeSeriesFileLoader extends FileLoader<TimeSeries<Integer, Double>
                 date = DATE_FORMAT_.parse(fields[0]);
                 value = Double.parseDouble(fields[1]);
             } catch (ParseException e) {
-                logger_.error(String.format("Skipping line %d in file %s: %s", lineNumber, file.toString(), e.getMessage()));
+                logger_.error(String.format("Skipping line %d in file %s: %s", lineNumber, path, e.getMessage()));
                 continue;
             }
 
-            timeSeries.addEntry((int) (date.getTime() / MS_IN_DAY), value);
+            timeSeries.addEntry(Utils.intFromDate(date), value);
         }
 
         return timeSeries;

@@ -1,22 +1,30 @@
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public abstract class FileLoader<T> implements Loader<T, String> {
 
     @Override
     public T load(String query) {
-        File file = new File(createPath_(query));
+        String path = createPath_(query);
+        File file = new File(path);
         if (!file.exists()) {
             return null;
         }
 
+        FileInputStream stream = null;
         try {
-            return parseFile_(query, file);
+            stream = new FileInputStream(file);
+            return parseFile_(query, path, stream);
         } catch (IOException e) {
             logger_.error(String.format("Error loading file %s: %s", file.toString(), e.getMessage()));
             return null;
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) { }
         }
     }
 
@@ -26,5 +34,5 @@ public abstract class FileLoader<T> implements Loader<T, String> {
 
     protected abstract String createPath_(String query);
 
-    protected abstract T parseFile_(String query, File file) throws IOException;
+    protected abstract T parseFile_(String query, String path, FileInputStream stream) throws IOException;
 }
