@@ -24,9 +24,11 @@ public class TimeSeries<K, V> {
         map_ = new TreeMap<K, V>();
     }
 
-    public TimeSeries(String name, Map<K, V> map_) {
+    public <V2 extends V> TimeSeries(String name, Map<K, V2> map_) {
         this(name);
-        map_.putAll(map_);
+        for (Map.Entry<K, V2> entry : map_.entrySet()) {
+            map_.put(entry.getKey(), entry.getValue());
+        }
     }
 
     private String name_;

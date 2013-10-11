@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public abstract class TimeSeriesFileLoader<V> extends FileLoader<TimeSeries<Integer, V>> {
+public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<V>> {
 
     public Set<String> getAllSeriesNames() {
         Set<String> names = new HashSet<String>();
@@ -42,11 +42,11 @@ public abstract class TimeSeriesFileLoader<V> extends FileLoader<TimeSeries<Inte
 
 
     @Override
-    protected TimeSeries<Integer, V> parseFile_(String query, String path, FileInputStream stream) throws IOException {
+    protected DateTimeSeries<V> parseFile_(String query, String path, FileInputStream stream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line;
         int lineNumber = 0;
-        TimeSeries<Integer, V> timeSeries = new TimeSeries<Integer, V>(query);
+        DateTimeSeries<V> timeSeries = new DateTimeSeries<V>(query);
 
         while ((line = reader.readLine()) != null) {
             ++lineNumber;

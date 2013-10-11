@@ -9,7 +9,26 @@ public class WordSearchJob implements Runnable {
 
     @Override
     public void run() {
+        for (int iteration = 0 ; iteration < ITERATIONS_ ; ++iteration) {
+            Range<Integer> timeRange = getTimeRange();
+            String[] wordBag = getWordBag();
+            List<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
+            for (int i = 0 ; i < wordBag.length ; ++i) {
+                wordSeries.add(getTimeSeries(wordBag[i]));
+            }
 
+            String seriesName = StringUtils.join(wordBag, "|");
+            CountTimeSeries fullSeries = combineTimeSeries(seriesName, wordSeries, timeRange);
+
+            String equityName = getEquityName();
+            DateTimeSeries<Double> priceSeries = context_.getPricesCache().get(equityName);
+
+            double pValue = GrangerCausality.granger(Utils.asDoubles(fullSeries.toList(timeRange)), priceSeries.toList(timeRange), LAG_WINDOWS_);
+
+            if (pValue < P_VALUE_THRESHOLD_) {
+                context_.getCollector().collect(new WordMatch(Arrays.asList(wordBag), equityName, timeRange, pValue));
+            }
+        }
     }
 
 
@@ -29,18 +48,17 @@ public class WordSearchJob implements Runnable {
     // TODO: Make these configurable
     private final static int START_DATE_ = Utils.intFromDate(new LocalDate(1993, 1, 1).toDate());
     private final static int END_DATE_ = Utils.intFromDate(new LocalDate(2013, 1, 1).toDate());
+    private final static double P_VALUE_THRESHOLD_ = 0.05;
+    private final static String EQUITY_NAME_ = "oil";
 
     // TODO: also figure out reasonable values for these
     private final static int MIN_RANGE_ = 100;
     private final static int MAX_RANGE_ = 365 * 5;
-    private final static int[] LAG_WINDOWS_ = { 1, 2, 3, 5, 7, 10 };
+    private final static List<Integer> LAG_WINDOWS_ = Arrays.asList(1, 2, 3, 5, 7, 10);
     private final static int BAG_SIZE_ = 5;
 
-
-    private class TimeRange {
-        public int start;
-        public int end;
-    }
+    // TODO: Set this much higher for production runs
+    private final static int ITERATIONS_ = 10;
 
 
     private int randomDate() {
@@ -48,8 +66,8 @@ public class WordSearchJob implements Runnable {
     }
 
 
-    private TimeRange getTimeRange() {
-        TimeRange range = new TimeRange();
+    private Range<Integer> getTimeRange() {
+        Range<Integer> range = new Range<Integer>();
         int rangeSize;
         do {
             range.start = randomDate();
@@ -85,20 +103,30 @@ public class WordSearchJob implements Runnable {
     }
 
 
-    private CountTimeSeries combineTimeSeries(Iterable<String> words) {
-        CountTimeSeries timeSeries = new CountTimeSeries(StringUtils.join(words, "|"));
-        for (String word : words) {
-            TimeSeries<Integer, Integer> wordSeries = context_.getWordsCache().get(word);
-            if (wordSeries == null) {
-                logger_.error(String.format("Unable to retrieve time series for word %s", word));
-                continue;
-            }
+    private DateTimeSeries<Integer> getTimeSeries(String word) {
+        DateTimeSeries<Integer> wordSeries = context_.getWordsCache().get(word);
+        if (wordSeries == null) {
+            logger_.error(String.format("Unable to retrieve time series for word %s", word));
+        }
 
-            for (Map.Entry<Integer, Integer> entry : wordSeries.getValues().entrySet()) {
+        return wordSeries;
+    }
+
+
+    private CountTimeSeries combineTimeSeries(String name, Iterable<DateTimeSeries<Integer>> wordSeries, Range<Integer> range) {
+        CountTimeSeries timeSeries = new CountTimeSeries(name);
+        for (DateTimeSeries<Integer> series : wordSeries) {
+            for (Map.Entry<Integer, Integer> entry : series.getValues().subMap(range.start, range.end + 1).entrySet()) {
                 timeSeries.addCount(entry.getKey(), entry.getValue());
             }
         }
 
         return timeSeries;
+    }
+
+
+    private String getEquityName() {
+        // TODO: add more equities here if desired
+        return EQUITY_NAME_;
     }
 }

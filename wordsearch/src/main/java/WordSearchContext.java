@@ -1,18 +1,18 @@
 public class WordSearchContext {
 
-    public TimeSeriesCache<Integer, Double> getPricesCache() {
+    public MemoryCache<DateTimeSeries<Double>> getPricesCache() {
         return pricesCache_;
     }
 
-    public void setPricesCache(TimeSeriesCache pricesCache) {
+    public void setPricesCache(MemoryCache<DateTimeSeries<Double>> pricesCache) {
         pricesCache_ = pricesCache;
     }
 
-    public TimeSeriesCache<Integer, Integer> getWordsCache() {
+    public MemoryCache<DateTimeSeries<Integer>> getWordsCache() {
         return wordsCache_;
     }
 
-    public void setWordsCache(TimeSeriesCache wordsCache) {
+    public void setWordsCache(MemoryCache<DateTimeSeries<Integer>> wordsCache) {
         wordsCache_ = wordsCache;
     }
 
@@ -24,7 +24,16 @@ public class WordSearchContext {
         allWords_ = allWords;
     }
 
-    private TimeSeriesCache<Integer, Double> pricesCache_;
-    private TimeSeriesCache<Integer, Integer> wordsCache_;
+    public ResultCollector<WordMatch> getCollector() {
+        return collector_;
+    }
+
+    public void setCollector(ResultCollector<WordMatch> collector) {
+        this.collector_ = collector;
+    }
+
+    private MemoryCache<DateTimeSeries<Double>> pricesCache_;
+    private MemoryCache<DateTimeSeries<Integer>> wordsCache_;
     private String[] allWords_;
+    private ResultCollector<WordMatch> collector_;
 }

@@ -1,4 +1,4 @@
-public class CountTimeSeries extends TimeSeries<Integer, Integer> {
+public class CountTimeSeries extends DateTimeSeries<Integer> {
 
     public void addCount(int date, int value) {
         // This kind of violates the spirit of the interface-- the map should never be modified via
