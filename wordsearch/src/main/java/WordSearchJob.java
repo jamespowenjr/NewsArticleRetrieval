@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 
 import java.util.*;
@@ -18,6 +20,11 @@ public class WordSearchJob implements Runnable {
 
 
     private WordSearchContext context_;
+    private final int totalWords_;
+    private final Random random_ = new Random();
+
+    private final static Logger logger_ = Logger.getLogger(WordSearchJob.class);
+
 
     // TODO: Make these configurable
     private final static int START_DATE_ = Utils.intFromDate(new LocalDate(1993, 1, 1).toDate());
@@ -28,10 +35,6 @@ public class WordSearchJob implements Runnable {
     private final static int MAX_RANGE_ = 365 * 5;
     private final static int[] LAG_WINDOWS_ = { 1, 2, 3, 5, 7, 10 };
     private final static int BAG_SIZE_ = 5;
-
-    private final static Random random_ = new Random();
-
-    private final int totalWords_;
 
 
     private class TimeRange {
@@ -79,5 +82,23 @@ public class WordSearchJob implements Runnable {
         }
 
         return bag;
+    }
+
+
+    private CountTimeSeries combineTimeSeries(Iterable<String> words) {
+        CountTimeSeries timeSeries = new CountTimeSeries(StringUtils.join(words, "|"));
+        for (String word : words) {
+            TimeSeries<Integer, Integer> wordSeries = context_.getWordsCache().get(word);
+            if (wordSeries == null) {
+                logger_.error(String.format("Unable to retrieve time series for word %s", word));
+                continue;
+            }
+
+            for (Map.Entry<Integer, Integer> entry : wordSeries.getValues().entrySet()) {
+                timeSeries.addCount(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return timeSeries;
     }
 }

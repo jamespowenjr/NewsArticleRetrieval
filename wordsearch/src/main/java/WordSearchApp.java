@@ -7,13 +7,13 @@ public class WordSearchApp {
 
 
     public static void main(String[] args) {
-        TimeSeriesFileLoader wordFileLoader = new TimeSeriesFileLoader(
+        TimeSeriesFileLoader<Integer> wordFileLoader = new CountTimeSeriesFileLoader(
                 new File(args[1], WORD_TIME_SERIES_DIRECTORY_).toString());
-        TimeSeriesFileLoader priceFileLoader = new TimeSeriesFileLoader(
+        TimeSeriesFileLoader<Double> priceFileLoader = new PriceTimeSeriesFileLoader(
                 new File(args[1], PRICES_TIME_SERIES_DIRECTORY_).toString());
 
-        TimeSeriesCache wordsCache = new TimeSeriesCache(wordFileLoader);
-        TimeSeriesCache pricesCache = new TimeSeriesCache(priceFileLoader);
+        TimeSeriesCache<Integer, Integer> wordsCache = new TimeSeriesCache<Integer, Integer>(wordFileLoader);
+        TimeSeriesCache<Integer, Double> pricesCache = new TimeSeriesCache<Integer, Double>(priceFileLoader);
 
         Set<String> allWords = wordFileLoader.getAllSeriesNames();
 

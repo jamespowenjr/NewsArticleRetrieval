@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class TimeSeriesFileLoader extends FileLoader<TimeSeries<Integer, Double>> {
+public abstract class TimeSeriesFileLoader<V> extends FileLoader<TimeSeries<Integer, V>> {
 
     public Set<String> getAllSeriesNames() {
         Set<String> names = new HashSet<String>();
@@ -42,32 +42,34 @@ public class TimeSeriesFileLoader extends FileLoader<TimeSeries<Integer, Double>
 
 
     @Override
-    protected TimeSeries<Integer, Double> parseFile_(String query, String path, FileInputStream stream) throws IOException {
+    protected TimeSeries<Integer, V> parseFile_(String query, String path, FileInputStream stream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line;
         int lineNumber = 0;
-        TimeSeries<Integer, Double> timeSeries = new TimeSeries<Integer, Double>(query);
+        TimeSeries<Integer, V> timeSeries = new TimeSeries<Integer, V>(query);
 
         while ((line = reader.readLine()) != null) {
             ++lineNumber;
             String[] fields = line.split(FIELD_SEPARATOR_);
 
             Date date;
-            double value;
+            V value;
             try {
                 if (fields.length != 2) {
                     throw new ParseException("All lines must have exactly 2 fields", 0);
                 }
                 date = DATE_FORMAT_.parse(fields[0]);
-                value = Double.parseDouble(fields[1]);
+                value = parseValue_(fields[1]);
+                timeSeries.addEntry(Utils.intFromDate(date), value);
             } catch (ParseException e) {
                 logger_.error(String.format("Skipping line %d in file %s: %s", lineNumber, path, e.getMessage()));
                 continue;
             }
-
-            timeSeries.addEntry(Utils.intFromDate(date), value);
         }
 
         return timeSeries;
     }
+
+
+    protected abstract V parseValue_(String value);
 }

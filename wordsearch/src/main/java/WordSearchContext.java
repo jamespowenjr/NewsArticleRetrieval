@@ -1,6 +1,6 @@
 public class WordSearchContext {
 
-    public TimeSeriesCache getPricesCache() {
+    public TimeSeriesCache<Integer, Double> getPricesCache() {
         return pricesCache_;
     }
 
@@ -8,7 +8,7 @@ public class WordSearchContext {
         pricesCache_ = pricesCache;
     }
 
-    public TimeSeriesCache getWordsCache() {
+    public TimeSeriesCache<Integer, Integer> getWordsCache() {
         return wordsCache_;
     }
 
@@ -24,7 +24,7 @@ public class WordSearchContext {
         allWords_ = allWords;
     }
 
-    private TimeSeriesCache pricesCache_;
-    private TimeSeriesCache wordsCache_;
+    private TimeSeriesCache<Integer, Double> pricesCache_;
+    private TimeSeriesCache<Integer, Integer> wordsCache_;
     private String[] allWords_;
 }
