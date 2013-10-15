@@ -1,3 +1,5 @@
+package com.bah.finance.wordsearch;
+
 public class CountTimeSeriesFileLoader extends TimeSeriesFileLoader<Integer> {
 
     public CountTimeSeriesFileLoader(String searchDirectory) {

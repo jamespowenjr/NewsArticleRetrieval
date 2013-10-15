@@ -1,3 +1,5 @@
+package com.bah.finance.wordsearch;
+
 public class CountTimeSeries extends DateTimeSeries<Integer> {
 
     public void addCount(int date, int value) {

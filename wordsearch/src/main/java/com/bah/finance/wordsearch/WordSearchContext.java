@@ -1,3 +1,5 @@
+package com.bah.finance.wordsearch;
+
 public class WordSearchContext {
 
     public MemoryCache<DateTimeSeries<Double>> getPricesCache() {

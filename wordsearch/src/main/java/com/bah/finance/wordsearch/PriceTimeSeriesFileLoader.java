@@ -1,3 +1,5 @@
+package com.bah.finance.wordsearch;
+
 public class PriceTimeSeriesFileLoader extends TimeSeriesFileLoader<Double> {
 
     public PriceTimeSeriesFileLoader(String searchDirectory) {

@@ -1,3 +1,5 @@
+package com.bah.finance.wordsearch;
+
 import java.util.HashMap;
 import java.util.Map;
 

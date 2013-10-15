@@ -1,3 +1,5 @@
+package com.bah.finance.wordsearch;
+
 public class FileOutputCollector implements ResultCollector<WordMatch> {
 
     @Override

@@ -1,6 +1,9 @@
+package com.bah.finance.wordsearch;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
+import ru.algorithmist.jquant.math.GrangerTest;
 
 import java.util.*;
 
@@ -23,7 +26,8 @@ public class WordSearchJob implements Runnable {
             String equityName = getEquityName();
             DateTimeSeries<Double> priceSeries = context_.getPricesCache().get(equityName);
 
-            double pValue = GrangerCausality.granger(Utils.asDoubles(fullSeries.toList(timeRange)), priceSeries.toList(timeRange), LAG_WINDOWS_);
+            double pValue = GrangerTest.granger(Utils.asDoubles(fullSeries.toList(timeRange)),
+                    Utils.asArray(priceSeries.toList(timeRange)), LAG_WINDOWS_[LAG_WINDOWS_.length - 1]);
 
             if (pValue < P_VALUE_THRESHOLD_) {
                 context_.getCollector().collect(new WordMatch(Arrays.asList(wordBag), equityName, timeRange, pValue));
@@ -54,7 +58,7 @@ public class WordSearchJob implements Runnable {
     // TODO: also figure out reasonable values for these
     private final static int MIN_RANGE_ = 100;
     private final static int MAX_RANGE_ = 365 * 5;
-    private final static List<Integer> LAG_WINDOWS_ = Arrays.asList(1, 2, 3, 5, 7, 10);
+    private final static int[] LAG_WINDOWS_ = new int[] {1, 2, 3, 5, 7, 10 };
     private final static int BAG_SIZE_ = 5;
 
     // TODO: Set this much higher for production runs

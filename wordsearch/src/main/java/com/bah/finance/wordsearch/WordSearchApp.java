@@ -1,3 +1,5 @@
+package com.bah.finance.wordsearch;
+
 import java.io.File;
 import java.util.Set;
 
