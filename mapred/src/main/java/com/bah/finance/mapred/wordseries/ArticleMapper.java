@@ -7,6 +7,8 @@ import org.apache.hadoop.mapred.Mapper;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
+import com.bah.finance.mapred.ArticleWritable;
+
 import java.io.IOException;
 
 public class ArticleMapper implements Mapper<Text, ArticleWritable, Text, LongWritable> {
