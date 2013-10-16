@@ -4,9 +4,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,7 +60,7 @@ public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line;
         int lineNumber = 0;
-        DateTimeSeries<V> timeSeries = new DateTimeSeries<V>(query);
+        DateTimeSeries<V> timeSeries = createTimeSeries_(query);
 
         while ((line = reader.readLine()) != null) {
             ++lineNumber;
@@ -93,4 +91,5 @@ public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<
 
     protected abstract V parseValue_(String value);
     protected abstract boolean forceNextDate_();
+    protected abstract DateTimeSeries<V> createTimeSeries_(String name);
 }

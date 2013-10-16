@@ -15,4 +15,9 @@ public class CountTimeSeriesFileLoader extends TimeSeriesFileLoader<Integer> {
     protected boolean forceNextDate_() {
         return true;
     }
+
+    @Override
+    protected DateTimeSeries<Integer> createTimeSeries_(String name) {
+        return new CountTimeSeries(name);
+    }
 }

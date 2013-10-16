@@ -15,4 +15,9 @@ public class PriceTimeSeriesFileLoader extends TimeSeriesFileLoader<Double> {
     protected boolean forceNextDate_() {
         return false;
     }
+
+    @Override
+    protected DateTimeSeries<Double> createTimeSeries_(String name) {
+        return new PriceTimeSeries(name);
+    }
 }

@@ -12,25 +12,11 @@ public class WordSearchJob implements Runnable {
     @Override
     public void run() {
         for (int iteration = 0 ; iteration < ITERATIONS_ ; ++iteration) {
-            Range<Integer> timeRange = getTimeRange();
-            String[] wordBag = getWordBag();
-            Collection<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
-            for (String word : wordBag) {
-                wordSeries.add(getTimeSeries(word));
-            }
-
-            String seriesName = StringUtils.join(wordBag, "|");
-            CountTimeSeries fullSeries = combineTimeSeries(seriesName, wordSeries, timeRange);
-
-            String equityName = getEquityName();
-            DateTimeSeries<Double> priceSeries = context_.getPricesCache().get(equityName);
-
-            double pValue = GrangerTest.granger(Utils.asDoubles(fullSeries.toList(timeRange)),
-                    Utils.asArray(priceSeries.toList(timeRange)), LAG_WINDOWS_[LAG_WINDOWS_.length - 1]);
-
-            if (pValue < P_VALUE_THRESHOLD_) {
-                context_.getCollector().collect(new WordMatch(Arrays.asList(wordBag), equityName, timeRange, pValue));
-            }
+            //try {
+                oneIteration_();
+            //} catch (Exception e) {
+              //  logger_.error(e.getMessage());
+            //}
         }
     }
 
@@ -38,8 +24,8 @@ public class WordSearchJob implements Runnable {
     public WordSearchJob(WordSearchContext context) {
         context_ = context;
         totalWords_ = context_.getAllWords().length;
-        startDate_ = context_.getDateMap().getStartDate();
-        endDate_ = context_.getDateMap().getEndDate();
+        startDate_ = 0;
+        endDate_ = context_.getDateMap().size() - 1;
     }
 
 
@@ -53,32 +39,59 @@ public class WordSearchJob implements Runnable {
 
 
     // TODO: Make these configurable
-    private final static double P_VALUE_THRESHOLD_ = 0.05;
-    private final static String EQUITY_NAME_ = "oil";
+    private final static double P_VALUE_THRESHOLD_ = 0.0001;
+    private final static String EQUITY_NAME_ = "PL.C";
 
     // TODO: also figure out reasonable values for these
-    private final static int MIN_RANGE_ = 100;
-    private final static int MAX_RANGE_ = 365 * 5;
-    private final static int[] LAG_WINDOWS_ = new int[] {1, 2, 3, 5, 7, 10 };
-    private final static int BAG_SIZE_ = 5;
+    private final static int MIN_RANGE_ = 120; // ~6 months
+    private final static int MAX_RANGE_ = 2500; // ~10 years
+    private final static int LAG_WINDOWS_ = 10;
+    private final static int MIN_BAG_SIZE_ = 3;
+    private final static int MAX_BAG_SIZE_ = 10;
 
     // TODO: Set this much higher for production runs
-    private final static int ITERATIONS_ = 10;
+    private final static int ITERATIONS_ = 1000;
 
 
-    private int randomDate() {
+    private void oneIteration_() {
+        Range<Integer> timeRange = getTimeRange_();
+        String[] wordBag = getWordBag_();
+        Collection<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
+        for (String word : wordBag) {
+            wordSeries.add(getTimeSeries_(word));
+        }
+
+        String seriesName = StringUtils.join(wordBag, "|");
+        DateTimeSeries<Integer> fullSeries = combineTimeSeries_(seriesName, wordSeries, timeRange);
+
+        String equityName = getEquityName_();
+        DateTimeSeries<Double> priceSeries = context_.getPricesCache().get(equityName);
+
+        System.out.println(String.format("%d", timeRange.end - timeRange.start));
+        double pValue = GrangerTest.granger(
+                Utils.asArray(priceSeries.toList(timeRange)),
+                Utils.asDoubles(fullSeries.toList(timeRange)),
+                LAG_WINDOWS_);
+
+        if (pValue < P_VALUE_THRESHOLD_) {
+            context_.getCollector().collect(new WordMatch(Arrays.asList(wordBag), equityName, timeRange, pValue));
+        }
+    }
+
+
+    private int randomDate_() {
         return random_.nextInt(endDate_ - startDate_ + 1) + startDate_;
     }
 
 
-    private Range<Integer> getTimeRange() {
-        Range<Integer> range = new Range<Integer>();
+    private Range<Integer> getTimeRange_() {
+        Range<Integer> range = new Range<Integer>(0, 0);
         int rangeSize;
         do {
-            range.start = randomDate();
-            range.end = randomDate();
+            range.start = randomDate_();
+            range.end = randomDate_();
             rangeSize = Math.abs(range.end - range.start);
-        } while (rangeSize >= MIN_RANGE_ && rangeSize <= MAX_RANGE_);
+        } while (rangeSize < MIN_RANGE_ || rangeSize > MAX_RANGE_);
 
         if (range.start > range.end) {
             range.start ^= range.end;
@@ -90,13 +103,14 @@ public class WordSearchJob implements Runnable {
     }
 
 
-    private String[] getWordBag() {
+    private String[] getWordBag_() {
         Set<Integer> indices = new HashSet<Integer>();
-        while (indices.size() < BAG_SIZE_) {
+        int bagSize = random_.nextInt(MAX_BAG_SIZE_ - MIN_BAG_SIZE_ + 1) + MIN_BAG_SIZE_;
+        while (indices.size() < bagSize) {
             indices.add(random_.nextInt(totalWords_));
         }
 
-        String[] bag = new String[BAG_SIZE_];
+        String[] bag = new String[bagSize];
         int i = 0;
         for (Integer index : indices) {
             bag[i] = context_.getAllWords()[index];
@@ -107,7 +121,7 @@ public class WordSearchJob implements Runnable {
     }
 
 
-    private DateTimeSeries<Integer> getTimeSeries(String word) {
+    private DateTimeSeries<Integer> getTimeSeries_(String word) {
         DateTimeSeries<Integer> wordSeries = context_.getWordsCache().get(word);
         if (wordSeries == null) {
             logger_.error(String.format("Unable to retrieve time series for word %s", word));
@@ -117,7 +131,7 @@ public class WordSearchJob implements Runnable {
     }
 
 
-    private CountTimeSeries combineTimeSeries(String name, Iterable<DateTimeSeries<Integer>> wordSeries, Range<Integer> range) {
+    private DateTimeSeries<Integer> combineTimeSeries_(String name, Iterable<DateTimeSeries<Integer>> wordSeries, Range<Integer> range) {
         CountTimeSeries timeSeries = new CountTimeSeries(name);
         for (DateTimeSeries<Integer> series : wordSeries) {
             for (Map.Entry<Integer, Integer> entry : series.getValues().subMap(range.start, range.end + 1).entrySet()) {
@@ -129,7 +143,7 @@ public class WordSearchJob implements Runnable {
     }
 
 
-    private String getEquityName() {
+    private String getEquityName_() {
         // TODO: add more equities here if desired
         return EQUITY_NAME_;
     }

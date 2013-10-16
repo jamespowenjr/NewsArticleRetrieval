@@ -20,18 +20,24 @@ public class TradingDateMap {
         } else if (!useNext) {
             return null;
         } else {
-            return map_.tailMap(date).firstKey();
+            SortedMap<Integer, Integer> greater = map_.tailMap(date);
+            return greater.isEmpty() ? null : greater.firstKey();
         }
     }
 
 
     public Integer getStartDate() {
-        return map_.firstKey();
+        return map_.isEmpty() ? null : map_.firstKey();
     }
 
 
     public Integer getEndDate() {
-        return  map_.lastKey();
+        return map_.isEmpty() ? null : map_.lastKey();
+    }
+
+
+    public int size() {
+        return map_.size();
     }
 
 
