@@ -63,15 +63,20 @@ public class WordSearchJob implements Runnable {
 
         String seriesName = StringUtils.join(wordBag, "|");
         DateTimeSeries<Integer> fullSeries = combineTimeSeries_(seriesName, wordSeries, timeRange);
+        double[] wordArray = Utils.asDoubles(fullSeries.toList(timeRange));
+
+        // hacky, but empty list means no occurrences in this timeframe, which means we can't run Granger test
+        // we should probably take this a step further and have a minimum total occurrence count for the whole
+        // timeframe
+        if (wordArray.length == 0) {
+            return;
+        }
 
         String equityName = getEquityName_();
         DateTimeSeries<Double> priceSeries = context_.getPricesCache().get(equityName);
+        double[] priceArray = Utils.asArray(priceSeries.toList(timeRange));
 
-        System.out.println(String.format("%d", timeRange.end - timeRange.start));
-        double pValue = GrangerTest.granger(
-                Utils.asArray(priceSeries.toList(timeRange)),
-                Utils.asDoubles(fullSeries.toList(timeRange)),
-                LAG_WINDOWS_);
+        double pValue = GrangerTest.granger(priceArray, wordArray, LAG_WINDOWS_);
 
         if (pValue < P_VALUE_THRESHOLD_) {
             context_.getCollector().collect(new WordMatch(Arrays.asList(wordBag), equityName, timeRange, pValue));

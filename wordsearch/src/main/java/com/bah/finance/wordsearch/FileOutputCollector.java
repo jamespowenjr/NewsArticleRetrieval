@@ -36,7 +36,7 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
 
 
     public FileOutputCollector(File file) throws FileNotFoundException {
-        stream_ = new FileOutputStream(file);
+        stream_ = new FileOutputStream(file, true);
     }
 
     private FileOutputStream stream_;
