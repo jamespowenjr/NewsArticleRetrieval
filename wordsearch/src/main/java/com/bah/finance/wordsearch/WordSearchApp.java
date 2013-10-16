@@ -9,10 +9,15 @@ public class WordSearchApp {
 
 
     public static void main(String[] args) {
+        if (args.length < 1) {
+            System.err.println("Usage: WordSearchApp <data_path>");
+            System.exit(0);
+        }
+
         TimeSeriesFileLoader<Integer> wordFileLoader = new CountTimeSeriesFileLoader(
-                new File(args[1], WORD_TIME_SERIES_DIRECTORY_).toString());
+                new File(args[0], WORD_TIME_SERIES_DIRECTORY_).toString());
         TimeSeriesFileLoader<Double> priceFileLoader = new PriceTimeSeriesFileLoader(
-                new File(args[1], PRICES_TIME_SERIES_DIRECTORY_).toString());
+                new File(args[0], PRICES_TIME_SERIES_DIRECTORY_).toString());
 
         MemoryCache<DateTimeSeries<Integer>> wordsCache = new MemoryCache<DateTimeSeries<Integer>>(wordFileLoader);
         MemoryCache<DateTimeSeries<Double>> pricesCache = new MemoryCache<DateTimeSeries<Double>>(priceFileLoader);
