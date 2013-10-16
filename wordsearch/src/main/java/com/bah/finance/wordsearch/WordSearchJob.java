@@ -48,9 +48,10 @@ public class WordSearchJob implements Runnable {
     private final static int LAG_WINDOWS_ = 10;
     private final static int MIN_BAG_SIZE_ = 3;
     private final static int MAX_BAG_SIZE_ = 10;
+    private final static int MIN_WORD_TOTAL_ = 100;
 
     // TODO: Set this much higher for production runs
-    private final static int ITERATIONS_ = 1000;
+    private final static int ITERATIONS_ = 10000;
 
 
     private void oneIteration_() {
@@ -65,10 +66,7 @@ public class WordSearchJob implements Runnable {
         DateTimeSeries<Integer> fullSeries = combineTimeSeries_(seriesName, wordSeries, timeRange);
         double[] wordArray = Utils.asDoubles(fullSeries.toList(timeRange));
 
-        // hacky, but empty list means no occurrences in this timeframe, which means we can't run Granger test
-        // we should probably take this a step further and have a minimum total occurrence count for the whole
-        // timeframe
-        if (wordArray.length == 0) {
+        if (Utils.sum(wordArray) < MIN_WORD_TOTAL_) {
             return;
         }
 
