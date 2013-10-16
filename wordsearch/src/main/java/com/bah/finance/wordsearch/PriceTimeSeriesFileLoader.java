@@ -2,12 +2,17 @@ package com.bah.finance.wordsearch;
 
 public class PriceTimeSeriesFileLoader extends TimeSeriesFileLoader<Double> {
 
-    public PriceTimeSeriesFileLoader(String searchDirectory) {
-        super(searchDirectory);
+    public PriceTimeSeriesFileLoader(String searchDirectory, TradingDateMap dateMap) {
+        super(searchDirectory, dateMap);
     }
 
     @Override
     protected Double parseValue_(String value) {
         return Double.parseDouble(value);
+    }
+
+    @Override
+    protected boolean forceNextDate_() {
+        return false;
     }
 }

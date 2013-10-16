@@ -34,8 +34,17 @@ public class WordSearchContext {
         this.collector_ = collector;
     }
 
+    public TradingDateMap getDateMap() {
+        return dateMap_;
+    }
+
+    public void setDateMap(TradingDateMap dateMap) {
+        dateMap_ = dateMap;
+    }
+
     private MemoryCache<DateTimeSeries<Double>> pricesCache_;
     private MemoryCache<DateTimeSeries<Integer>> wordsCache_;
     private String[] allWords_;
     private ResultCollector<WordMatch> collector_;
+    private TradingDateMap dateMap_;
 }

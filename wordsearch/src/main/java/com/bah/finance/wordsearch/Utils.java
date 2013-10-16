@@ -1,22 +1,10 @@
 package com.bah.finance.wordsearch;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Utils {
 
-    public final static int MS_IN_DAY = 60 * 60 * 24 * 1000;
-
-    public static int intFromDate(Date date) {
-        return (int) (date.getTime() / MS_IN_DAY);
-    }
-
-    public static Date dateFromInt(int n) {
-        return new Date(((long) n) * MS_IN_DAY);
-    }
-
-    public static double[] asDoubles(List<Integer> ints) {
+    public static double[] asDoubles(Collection<Integer> ints) {
         double[] doubles = new double[ints.size()];
         int index = 0;
         for (Integer i : ints) {
@@ -29,7 +17,7 @@ public class Utils {
     }
 
 
-    public static double[] asArray(List<Double> list) {
+    public static double[] asArray(Collection<Double> list) {
         double[] doubles = new double[list.size()];
         int index = 0;
         for (Double d : list) {

@@ -2,7 +2,6 @@ package com.bah.finance.wordsearch;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.joda.time.LocalDate;
 import ru.algorithmist.jquant.math.GrangerTest;
 
 import java.util.*;
@@ -15,9 +14,9 @@ public class WordSearchJob implements Runnable {
         for (int iteration = 0 ; iteration < ITERATIONS_ ; ++iteration) {
             Range<Integer> timeRange = getTimeRange();
             String[] wordBag = getWordBag();
-            List<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
-            for (int i = 0 ; i < wordBag.length ; ++i) {
-                wordSeries.add(getTimeSeries(wordBag[i]));
+            Collection<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
+            for (String word : wordBag) {
+                wordSeries.add(getTimeSeries(word));
             }
 
             String seriesName = StringUtils.join(wordBag, "|");
@@ -39,19 +38,21 @@ public class WordSearchJob implements Runnable {
     public WordSearchJob(WordSearchContext context) {
         context_ = context;
         totalWords_ = context_.getAllWords().length;
+        startDate_ = context_.getDateMap().getStartDate();
+        endDate_ = context_.getDateMap().getEndDate();
     }
 
 
     private WordSearchContext context_;
     private final int totalWords_;
     private final Random random_ = new Random();
+    private int startDate_;
+    private int endDate_;
 
     private final static Logger logger_ = Logger.getLogger(WordSearchJob.class);
 
 
     // TODO: Make these configurable
-    private final static int START_DATE_ = Utils.intFromDate(new LocalDate(1993, 1, 1).toDate());
-    private final static int END_DATE_ = Utils.intFromDate(new LocalDate(2013, 1, 1).toDate());
     private final static double P_VALUE_THRESHOLD_ = 0.05;
     private final static String EQUITY_NAME_ = "oil";
 
@@ -66,7 +67,7 @@ public class WordSearchJob implements Runnable {
 
 
     private int randomDate() {
-        return random_.nextInt(END_DATE_ - START_DATE_ + 1) + START_DATE_;
+        return random_.nextInt(endDate_ - startDate_ + 1) + startDate_;
     }
 
 
@@ -97,9 +98,8 @@ public class WordSearchJob implements Runnable {
 
         String[] bag = new String[BAG_SIZE_];
         int i = 0;
-        Iterator<Integer> it = indices.iterator();
-        while (it.hasNext()) {
-            bag[i] = context_.getAllWords()[it.next()];
+        for (Integer index : indices) {
+            bag[i] = context_.getAllWords()[index];
             ++i;
         }
 
