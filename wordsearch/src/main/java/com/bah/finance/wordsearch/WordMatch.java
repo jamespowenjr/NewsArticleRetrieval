@@ -4,7 +4,7 @@ import java.util.List;
 
 public class WordMatch {
 
-    public List<String> getWords() {
+    public List<DateTimeSeries<Integer>> getSeries() {
         return words_;
     }
 
@@ -20,14 +20,14 @@ public class WordMatch {
         return pValue_;
     }
 
-    public WordMatch(List<String> words, String equity, Range<Integer> timeframe, double pValue) {
+    public WordMatch(List<DateTimeSeries<Integer>> words, String equity, Range<Integer> timeframe, double pValue) {
         words_ = words;
         equity_ = equity;
         timeframe_ = timeframe;
         pValue_ = pValue;
     }
 
-    private List<String> words_;
+    private List<DateTimeSeries<Integer>> words_;
     private String equity_;
     private Range<Integer> timeframe_;
     private double pValue_;

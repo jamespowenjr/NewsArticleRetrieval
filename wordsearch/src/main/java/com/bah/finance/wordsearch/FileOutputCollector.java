@@ -1,6 +1,5 @@
 package com.bah.finance.wordsearch;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -13,7 +12,18 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
     @Override
     public void collect(WordMatch result) {
         StringBuilder builder = new StringBuilder();
-        builder.append(StringUtils.join(result.getWords(), "|")).append(',');
+
+        boolean firstWord = true;
+        for (DateTimeSeries<Integer> series : result.getSeries()) {
+            if (firstWord) {
+                firstWord = false;
+            } else {
+                builder.append("|");
+            }
+            builder.append(series.getName()).append('*').append(series.getValues().subMap(result.getTimeframe().start, result.getTimeframe().end + 1).size());
+        }
+        builder.append(',');
+
         builder.append(result.getEquity()).append(',');
         builder.append(result.getTimeframe().start).append('-').append(result.getTimeframe().end).append(',');
         builder.append(result.getPValue()).append('\n');

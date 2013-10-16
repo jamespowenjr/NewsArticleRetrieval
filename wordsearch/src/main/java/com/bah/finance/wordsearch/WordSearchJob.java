@@ -57,7 +57,7 @@ public class WordSearchJob implements Runnable {
     private void oneIteration_() {
         Range<Integer> timeRange = getTimeRange_();
         String[] wordBag = getWordBag_();
-        Collection<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
+        List<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
         for (String word : wordBag) {
             wordSeries.add(getTimeSeries_(word));
         }
@@ -77,7 +77,7 @@ public class WordSearchJob implements Runnable {
         double pValue = GrangerTest.granger(priceArray, wordArray, LAG_WINDOWS_);
 
         if (pValue < P_VALUE_THRESHOLD_) {
-            context_.getCollector().collect(new WordMatch(Arrays.asList(wordBag), equityName, timeRange, pValue));
+            context_.getCollector().collect(new WordMatch(wordSeries, equityName, timeRange, pValue));
         }
     }
 
