@@ -39,7 +39,7 @@ public class WordSearchJob implements Runnable {
 
 
     // TODO: Make these configurable
-    private final static double P_VALUE_THRESHOLD_ = 0.0001;
+    private final static double P_VALUE_THRESHOLD_ = 0.01;
     private final static String EQUITY_NAME_ = "PL.C";
 
     // TODO: also figure out reasonable values for these

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 public class FileOutputCollector implements ResultCollector<WordMatch> {
 
@@ -20,7 +21,13 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
             } else {
                 builder.append("|");
             }
-            builder.append(series.getName()).append('*').append(series.getValues().subMap(result.getTimeframe().start, result.getTimeframe().end + 1).size());
+            builder.append(series.getName()).append('*');
+
+            int wordCount = 0;
+            for (Map.Entry<Integer, Integer> entry : series.getValues().subMap(result.getTimeframe().start, result.getTimeframe().end + 1).entrySet()) {
+                wordCount += entry.getValue();
+            }
+            builder.append(wordCount);
         }
         builder.append(',');
 
