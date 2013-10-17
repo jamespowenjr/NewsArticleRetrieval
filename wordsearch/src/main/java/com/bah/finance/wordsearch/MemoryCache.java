@@ -35,7 +35,7 @@ public class MemoryCache<T> {
     private Loader<T, String> loader_;
 
     private final int maxSize_;
-    private static final int DEFAULT_MAX_SIZE_ = 5000;
+    private static final int DEFAULT_MAX_SIZE_ = 10000;
 
 
     // This class could be extended to use a random caching strategy but because of the access patterns

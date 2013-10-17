@@ -21,7 +21,7 @@ public class TradingDateMap {
             return null;
         } else {
             SortedMap<Integer, Integer> greater = map_.tailMap(date);
-            return greater.isEmpty() ? null : greater.firstKey();
+            return greater.isEmpty() ? null : greater.get(greater.firstKey());
         }
     }
 
@@ -53,7 +53,7 @@ public class TradingDateMap {
         map_.clear();
         while ((line = reader.readLine()) != null) {
             Integer date = Integer.parseInt(line);
-            map_.put(date, ++lineNumber);
+            map_.put(date, lineNumber++);
         }
     }
 

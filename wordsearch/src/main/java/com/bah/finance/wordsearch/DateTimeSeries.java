@@ -8,6 +8,14 @@ public abstract class DateTimeSeries<V> extends TimeSeries<Integer, V> {
 
     public List<V> toList(Range<Integer> timeRange) {
 
+        if (timeRange == null) {
+            if (getValues().isEmpty()) {
+                return new ArrayList<V>(0);
+            } else {
+                timeRange = new Range<Integer>(getValues().firstKey(), getValues().lastKey());
+            }
+        }
+
         if (timeRange.start >= timeRange.end) {
             return new ArrayList<V>(0);
         }
