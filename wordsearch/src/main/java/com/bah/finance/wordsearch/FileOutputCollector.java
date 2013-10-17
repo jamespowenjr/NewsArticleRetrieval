@@ -8,6 +8,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
+// TODO: Because this will be called by multiple threads, in future implementations we might want to
+// have the collect method place matches onto a queue and have a separate thread polling and writing those
+// matches to a file.  However, right now we intend to use all of a machine's cores whenever this runs,
+// so we don't want to have another thread preempting the main search threads.
 public class FileOutputCollector implements ResultCollector<WordMatch> {
 
     @Override
@@ -37,7 +41,9 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
         builder.append(result.getPValue()).append('\n');
 
         try {
-            stream_.write(builder.toString().getBytes());
+            synchronized (this) {
+                stream_.write(builder.toString().getBytes());
+            }
         } catch (IOException e) {
             logger_.error(String.format("Error writing result to file: %s\nResult was %s", e.getMessage(), builder.toString()));
         }

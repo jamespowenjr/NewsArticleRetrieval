@@ -86,6 +86,11 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.bah.finance.wordsearch.WordSearchApp</mainClass>
+                        </manifest>
+                    </archive>
                     <!--<descriptors>
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
                     </descriptors>-->

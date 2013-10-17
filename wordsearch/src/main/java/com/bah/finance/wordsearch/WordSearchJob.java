@@ -11,7 +11,8 @@ public class WordSearchJob implements Runnable {
 
     @Override
     public void run() {
-        for (int iteration = 0 ; iteration < ITERATIONS_ ; ++iteration) {
+        //for (int iteration = 0 ; iteration < ITERATIONS_ ; ++iteration) {
+        while (true) {
             try {
                 oneIteration_();
             } catch (Exception e) {
@@ -49,11 +50,11 @@ public class WordSearchJob implements Runnable {
     private final static String[] EQUITY_NAMES_ = new String[] { "CL.C", "CL", };
 
     // TODO: also figure out reasonable values for these
-    private final static int MIN_RANGE_ = 120; // ~6 months
+    private final static int MIN_RANGE_ = 30;
     private final static int MAX_RANGE_ = 2500; // ~10 years
     private final static int LAG_WINDOWS_ = 10;
     private final static int MIN_BAG_SIZE_ = 3;
-    private final static int MAX_BAG_SIZE_ = 10;
+    private final static int MAX_BAG_SIZE_ = 20;
     private final static int MIN_WORD_TOTAL_ = 100;
 
     // TODO: Set this much higher for production runs

@@ -5,16 +5,32 @@ import java.util.Set;
 
 public class WordSearchApp {
 
-    public static final int THREAD_COUNT = 4;
+    public static final int DEFAULT_THREAD_COUNT = 4;
 
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
-            System.err.println("Usage: WordSearchApp <data_path>");
+            System.err.println("Usage: WordSearchApp <data_path> [thread_count]");
             System.exit(0);
         }
 
         TradingDateMap dateMap = new TradingDateMap(new File(args[0], DATES_FILE_));
+        int threadCount;
+        if (args.length >= 2) {
+            try {
+                threadCount = Integer.parseInt(args[1]);
+                if (threadCount <= 0) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                System.err.println("Thread count must be a positive integer");
+                return;
+            }
+        } else {
+            threadCount = DEFAULT_THREAD_COUNT;
+        }
+        System.out.println(String.format("Using %d threads", threadCount));
+
 
         TimeSeriesFileLoader<Integer> wordFileLoader = new CountTimeSeriesFileLoader(
                 new File(args[0], WORD_TIME_SERIES_DIRECTORY_).toString(), dateMap);
@@ -35,14 +51,14 @@ public class WordSearchApp {
         context.setCollector(collector);
         context.setDateMap(dateMap);
 
-        Thread[] threads = new Thread[THREAD_COUNT];
-        for (int i = 0 ; i < THREAD_COUNT ; ++i) {
+        Thread[] threads = new Thread[threadCount];
+        for (int i = 0 ; i < threadCount ; ++i) {
             Thread thread = new Thread(new WordSearchJob(context));
             threads[i] = thread;
             thread.start();
         }
 
-        for (int i = 0 ; i < THREAD_COUNT ; ++i) {
+        for (int i = 0 ; i < threadCount ; ++i) {
             while (true) {
                 try {
                     threads[i].join();
