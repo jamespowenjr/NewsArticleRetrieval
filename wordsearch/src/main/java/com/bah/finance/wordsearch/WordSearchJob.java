@@ -12,11 +12,11 @@ public class WordSearchJob implements Runnable {
     @Override
     public void run() {
         for (int iteration = 0 ; iteration < ITERATIONS_ ; ++iteration) {
-            //try {
+            try {
                 oneIteration_();
-            //} catch (Exception e) {
-              //  logger_.error(e.getMessage());
-            //}
+            } catch (Exception e) {
+                logger_.error(e.getMessage());
+            }
         }
     }
 
@@ -39,8 +39,14 @@ public class WordSearchJob implements Runnable {
 
 
     // TODO: Make these configurable
-    private final static double P_VALUE_THRESHOLD_ = 0.01;
-    private final static String EQUITY_NAME_ = "PL.C";
+    private final static double P_VALUE_THRESHOLD_ = Math.pow(10, -5);
+
+    // These are the top 20 series with the most non-zero values
+    /*private final static String[] EQUITY_NAMES_ = new String[] {
+        "CL.C", "NG.C", "HO.C", "PL.C", "PA.C", "HU.C", "QM.C", "QG.C", "PN", "PN.C", //10
+        "CL", "SC", "HO", "NG", "PL", "HU", "PA", "RB.C", "CLZ10", "X3", //20
+    };*/
+    private final static String[] EQUITY_NAMES_ = new String[] { "CL.C", "CL", };
 
     // TODO: also figure out reasonable values for these
     private final static int MIN_RANGE_ = 120; // ~6 months
@@ -73,6 +79,8 @@ public class WordSearchJob implements Runnable {
         String equityName = getEquityName_();
         DateTimeSeries<Double> priceSeries = context_.getPricesCache().get(equityName);
         double[] priceArray = Utils.asArray(priceSeries.toList(timeRange));
+
+
 
         double pValue = GrangerTest.granger(priceArray, wordArray, LAG_WINDOWS_);
 
@@ -147,7 +155,6 @@ public class WordSearchJob implements Runnable {
 
 
     private String getEquityName_() {
-        // TODO: add more equities here if desired
-        return EQUITY_NAME_;
+        return EQUITY_NAMES_[random_.nextInt(EQUITY_NAMES_.length)];
     }
 }

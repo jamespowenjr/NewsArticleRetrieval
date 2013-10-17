@@ -1,8 +1,9 @@
 package com.bah.finance.wordsearch;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import java.io.*;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 public class TradingDateMap {
 
@@ -20,19 +21,19 @@ public class TradingDateMap {
         } else if (!useNext) {
             return null;
         } else {
-            SortedMap<Integer, Integer> greater = map_.tailMap(date);
-            return greater.isEmpty() ? null : greater.get(greater.firstKey());
+            // This is technically O(n), but in practice we know that there will never be more than 3 or 4 consecutive
+            // non-trading days, so the number of iterations is strictly bounded and the real runtime is O(1).
+            while (tradingDate == null && date <= maxValue_) {
+                tradingDate = map_.get(++date);
+            }
+            return tradingDate;
         }
     }
 
 
-    public Integer getStartDate() {
-        return map_.isEmpty() ? null : map_.firstKey();
-    }
-
-
-    public Integer getEndDate() {
-        return map_.isEmpty() ? null : map_.lastKey();
+    // No notion of searching for next days here-- if the date is outside of our range, then it effectively does not exist
+    public Integer asRealDate(int tradingDate) {
+        return map_.inverse().get(tradingDate);
     }
 
 
@@ -50,16 +51,19 @@ public class TradingDateMap {
 
         // TODO: This is essentially the same as writing to a list and performing binary search for each lookup,
         // but this is easier to write for now
+        // This also assumes that the dates in the file are in order
         map_.clear();
         while ((line = reader.readLine()) != null) {
             Integer date = Integer.parseInt(line);
             map_.put(date, lineNumber++);
+            maxValue_ = date;
         }
     }
 
 
     public TradingDateMap() {
-        map_ = new TreeMap<Integer, Integer>();
+        map_ = HashBiMap.create();
+        maxValue_ = null;
     }
 
 
@@ -68,5 +72,6 @@ public class TradingDateMap {
         loadFromFile(file);
     }
 
-    private SortedMap<Integer, Integer> map_;
+    private BiMap<Integer, Integer> map_;
+    private Integer maxValue_;
 }

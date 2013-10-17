@@ -32,7 +32,8 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
         builder.append(',');
 
         builder.append(result.getEquity()).append(',');
-        builder.append(result.getTimeframe().start).append('-').append(result.getTimeframe().end).append(',');
+        builder.append(dateMap_.asRealDate(result.getTimeframe().start)).append(',');
+        builder.append(dateMap_.asRealDate(result.getTimeframe().end)).append(',');
         builder.append(result.getPValue()).append('\n');
 
         try {
@@ -52,11 +53,13 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
     }
 
 
-    public FileOutputCollector(File file) throws FileNotFoundException {
+    public FileOutputCollector(File file, TradingDateMap dateMap) throws FileNotFoundException {
         stream_ = new FileOutputStream(file, true);
+        dateMap_ = dateMap;
     }
 
     private FileOutputStream stream_;
+    private TradingDateMap dateMap_;
 
     private final static Logger logger_ = Logger.getLogger(FileOutputCollector.class);
 }

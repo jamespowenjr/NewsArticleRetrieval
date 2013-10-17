@@ -26,7 +26,7 @@ public class WordSearchApp {
 
         Set<String> allWords = wordFileLoader.getAllSeriesNames();
 
-        ResultCollector<WordMatch> collector = new FileOutputCollector(new File(OUTPUT_PATH_));
+        ResultCollector<WordMatch> collector = new FileOutputCollector(new File(OUTPUT_PATH_), dateMap);
 
         WordSearchContext context = new WordSearchContext();
         context.setAllWords(allWords.toArray(new String[allWords.size()]));
