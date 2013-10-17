@@ -80,8 +80,6 @@ public class WordSearchJob implements Runnable {
         DateTimeSeries<Double> priceSeries = context_.getPricesCache().get(equityName);
         double[] priceArray = Utils.asArray(priceSeries.toList(timeRange));
 
-
-
         double pValue = GrangerTest.granger(priceArray, wordArray, LAG_WINDOWS_);
 
         if (pValue < P_VALUE_THRESHOLD_) {
