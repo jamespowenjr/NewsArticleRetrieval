@@ -1,5 +1,7 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.loader.CountTimeSeriesFileLoader;
+import com.bah.finance.wordsearch.loader.TimeSeriesFileLoader;
 import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
 import com.bah.finance.wordsearch.util.Range;
 import org.junit.Assert;
@@ -12,7 +14,6 @@ import java.util.List;
 public class FileLoaderTest {
 
     public static final String WORDS_PATH = "/home/brendon/data/gresham/news/timeseries/words";
-    public static final int FILE_COUNT = 8849;
 
     private TradingDateMap dateMap_;
 
@@ -20,8 +21,6 @@ public class FileLoaderTest {
     public void setUp() throws Exception {
         dateMap_ = new TradingDateMap();
         dateMap_.loadFromFile(new File(TradingDateMapTest.FILE_PATH));
-        TimeSeriesFileLoader<Integer> wordFileLoader = new CountTimeSeriesFileLoader(
-                FileLoaderTest.WORDS_PATH, dateMap_);
     }
 
     @Test

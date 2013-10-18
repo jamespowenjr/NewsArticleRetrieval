@@ -1,5 +1,6 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.loader.MemoryCache;
 import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
 
 public class WordSearchContext {
@@ -42,14 +43,6 @@ public class WordSearchContext {
         this.collector_ = collector;
     }
 
-    public TradingDateMap getDateMap() {
-        return dateMap_;
-    }
-
-    public void setDateMap(TradingDateMap dateMap) {
-        dateMap_ = dateMap;
-    }
-
     public Class<? extends DateRangeGenerator> getDateRangeGenerator() {
         return dateRangeGenerator_;
     }
@@ -62,6 +55,5 @@ public class WordSearchContext {
     private MemoryCache<DateTimeSeries<Integer>> wordsCache_;
     private String[] allWords_;
     private ResultCollector<WordMatch> collector_;
-    private TradingDateMap dateMap_;
     private Class<? extends DateRangeGenerator> dateRangeGenerator_;
 }

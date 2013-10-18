@@ -1,4 +1,4 @@
-package com.bah.finance.wordsearch;
+package com.bah.finance.wordsearch.loader;
 
 import org.apache.log4j.Logger;
 
@@ -24,9 +24,11 @@ public abstract class FileLoader<T> implements Loader<T, String> {
             logger_.error(String.format("Error loading file %s: %s", file.toString(), e.getMessage()));
             return null;
         } finally {
-            try {
-                stream.close();
-            } catch (IOException e) { }
+            if (stream != null) {
+                try {
+                        stream.close();
+                } catch (IOException e) { }
+            }
         }
     }
 

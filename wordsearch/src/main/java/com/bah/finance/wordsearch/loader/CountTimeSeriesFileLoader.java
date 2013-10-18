@@ -1,5 +1,6 @@
-package com.bah.finance.wordsearch;
+package com.bah.finance.wordsearch.loader;
 
+import com.bah.finance.wordsearch.TradingDateMap;
 import com.bah.finance.wordsearch.timeseries.CountTimeSeries;
 import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
 

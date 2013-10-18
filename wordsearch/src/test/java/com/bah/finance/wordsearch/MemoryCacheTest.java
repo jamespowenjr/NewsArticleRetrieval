@@ -1,5 +1,8 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.loader.CountTimeSeriesFileLoader;
+import com.bah.finance.wordsearch.loader.MemoryCache;
+import com.bah.finance.wordsearch.loader.TimeSeriesFileLoader;
 import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
 import com.bah.finance.wordsearch.util.Range;
 import org.junit.Assert;

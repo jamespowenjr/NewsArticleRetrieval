@@ -1,5 +1,9 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.loader.CountTimeSeriesFileLoader;
+import com.bah.finance.wordsearch.loader.MemoryCache;
+import com.bah.finance.wordsearch.loader.PriceTimeSeriesFileLoader;
+import com.bah.finance.wordsearch.loader.TimeSeriesFileLoader;
 import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
 import com.bah.finance.wordsearch.util.Utils;
 
@@ -20,7 +24,7 @@ public class WordSearchApp {
             System.err.println("!!! Unable to load configuration file !!!");
         }
 
-        String dateFilePath = Utils.getConfigValue(props, DATES_FILE_KEY_, String.class, DEFAULT_DATES_FILE_);
+        String dateFilePath = Utils.getConfigValue(props, DATES_FILE_KEY_, String.class);
 
         System.out.print(String.format("Loading trading dates files from %s ...", dateFilePath));
         TradingDateMap dateMap = new TradingDateMap(new File(dateFilePath));
@@ -29,13 +33,13 @@ public class WordSearchApp {
         int threadCount = Utils.getConfigInt(props, THREAD_COUNT_KEY_, DEFAULT_THREAD_COUNT_);
         System.out.println(String.format("Using %d threads", threadCount));
 
-        String wordsPath = Utils.getConfigValue(props, WORDS_PATH_KEY_, String.class, DEFAULT_WORDS_PATH_);
+        String wordsPath = Utils.getConfigValue(props, WORDS_PATH_KEY_, String.class);
         System.out.print(String.format("Searching for word time series in directory %s ...", wordsPath));
         TimeSeriesFileLoader<Integer> wordFileLoader = new CountTimeSeriesFileLoader(wordsPath, dateMap);
         Set<String> allWords = wordFileLoader.getAllSeriesNames();
         System.out.println(String.format(" %d files found", allWords.size()));
 
-        String pricesPath = Utils.getConfigValue(props, PRICES_PATH_KEY_, String.class, DEFAULT_PRICES_PATH_);
+        String pricesPath = Utils.getConfigValue(props, PRICES_PATH_KEY_, String.class);
         System.out.print(String.format("Searching for price time series in directory %s ...", pricesPath));
         TimeSeriesFileLoader<Double> priceFileLoader = new PriceTimeSeriesFileLoader(pricesPath, dateMap);
         System.out.println(String.format(" %d files found", priceFileLoader.getAllSeriesNames().size()));
@@ -51,7 +55,6 @@ public class WordSearchApp {
         context.setWordsCache(wordsCache);
         context.setPricesCache(pricesCache);
         context.setCollector(collector);
-        context.setDateMap(dateMap);
         context.setDateRangeGenerator(RandomDateRangeGenerator.class);
 
         Thread[] threads = new Thread[threadCount];
@@ -88,13 +91,8 @@ public class WordSearchApp {
     private static final int DEFAULT_THREAD_COUNT_ = 4;
 
     private static final String DATES_FILE_KEY_ = "data.dates_path";
-    private static final String DEFAULT_DATES_FILE_ = "trading_dates.txt";
-
     private static final String WORDS_PATH_KEY_ = "data.words_path";
-    private static final String DEFAULT_WORDS_PATH_ = "./words";
-
     private static final String PRICES_PATH_KEY_ = "data.prices_path";
-    private static final String DEFAULT_PRICES_PATH_ = "./prices";
 
     private static final String OUTPUT_PATH_KEY_ = "data.output_path";
     private static final String DEFAULT_OUTPUT_PATH_ = "output.txt";
