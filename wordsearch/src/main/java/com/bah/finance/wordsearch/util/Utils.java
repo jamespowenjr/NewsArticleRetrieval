@@ -39,6 +39,16 @@ public class Utils {
     }
 
 
+    public static String getConfigValue(Properties props, String key) throws PropertyException {
+        return getConfigValue(props, key, String.class);
+    }
+
+
+    public static String getConfigValue(Properties props, String key, String defaultValue) throws PropertyException {
+        return getConfigValue(props, key, String.class, defaultValue);
+    }
+
+
     public static <T> T getConfigValue(Properties props, String key, Class<? extends T> clazz) throws PropertyException {
         return getConfigValue(props, key, clazz, null);
     }

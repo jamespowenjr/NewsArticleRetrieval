@@ -16,8 +16,8 @@ public class CountTimeSeriesFileLoader extends TimeSeriesFileLoader<Integer> {
     }
 
     @Override
-    protected boolean forceNextDate_() {
-        return true;
+    protected TradingDateMap.DateSearchType dateSearchType_() {
+        return TradingDateMap.DateSearchType.Next;
     }
 
     @Override

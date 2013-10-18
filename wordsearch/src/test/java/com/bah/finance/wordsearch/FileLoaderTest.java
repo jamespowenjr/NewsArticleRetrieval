@@ -30,12 +30,12 @@ public class FileLoaderTest {
 
         DateTimeSeries<Integer> timeseries = loader.load("biodiesel");
         Range<Integer> timeframe = new Range<Integer>(
-                dateMap_.asTradingDate(20010628, true),
-                dateMap_.asTradingDate(20021015, true)
+                dateMap_.asTradingDate(20010628, TradingDateMap.DateSearchType.Next),
+                dateMap_.asTradingDate(20021015, TradingDateMap.DateSearchType.Next)
         );
         List<Integer> list = timeseries.toList(timeframe);
         Assert.assertEquals((long)1, (long)list.get(0));
-        Assert.assertEquals((long)16, (long)list.get(dateMap_.asTradingDate(20020512, true) - dateMap_.asTradingDate(20010628, true)));
-        Assert.assertEquals((long)0, (long)list.get(dateMap_.asTradingDate(20011201, true) - dateMap_.asTradingDate(20010628, true)));
+        Assert.assertEquals((long)16, (long)list.get(dateMap_.asTradingDate(20020512, TradingDateMap.DateSearchType.Next) - dateMap_.asTradingDate(20010628, TradingDateMap.DateSearchType.Next)));
+        Assert.assertEquals((long)0, (long)list.get(dateMap_.asTradingDate(20011201, TradingDateMap.DateSearchType.Next) - dateMap_.asTradingDate(20010628, TradingDateMap.DateSearchType.Next)));
     }
 }

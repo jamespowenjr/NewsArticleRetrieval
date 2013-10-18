@@ -43,17 +43,17 @@ public class WordSearchContext {
         this.collector_ = collector;
     }
 
-    public Class<? extends DateRangeGenerator> getDateRangeGenerator() {
+    public DateRangeGenerator getDateRangeGenerator() {
         return dateRangeGenerator_;
     }
 
-    public void setDateRangeGenerator(Class<? extends DateRangeGenerator> clazz) {
-        dateRangeGenerator_ = clazz;
+    public void setDateRangeGenerator(DateRangeGenerator generator) {
+        dateRangeGenerator_ = generator;
     }
 
     private MemoryCache<DateTimeSeries<Double>> pricesCache_;
     private MemoryCache<DateTimeSeries<Integer>> wordsCache_;
     private String[] allWords_;
     private ResultCollector<WordMatch> collector_;
-    private Class<? extends DateRangeGenerator> dateRangeGenerator_;
+    private DateRangeGenerator dateRangeGenerator_;
 }

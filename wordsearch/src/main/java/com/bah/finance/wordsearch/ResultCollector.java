@@ -1,6 +1,8 @@
 package com.bah.finance.wordsearch;
 
-public interface ResultCollector<T> {
+import com.bah.finance.wordsearch.util.Configurable;
+
+public interface ResultCollector<T> extends Configurable {
     public void collect(T result);
     public void finalize();
 }

@@ -2,16 +2,24 @@ package com.bah.finance.wordsearch.loader;
 
 import com.bah.finance.wordsearch.TradingDateMap;
 import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
+import com.bah.finance.wordsearch.util.PropertyException;
+import com.bah.finance.wordsearch.util.Utils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 
 public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<V>> {
+
+    @Override
+    public void configure(Properties props) throws PropertyException {
+        searchDirectory_ = Utils.getConfigValue(props, searchDirectoryKey_);
+    }
 
     public Set<String> getAllSeriesNames() {
         Set<String> names = new HashSet<String>();
@@ -35,13 +43,15 @@ public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<
     }
 
 
-    public TimeSeriesFileLoader(String searchDirectory, TradingDateMap dateMap) {
-        searchDirectory_ = searchDirectory;
+    public TimeSeriesFileLoader(String searchDirectoryKey, TradingDateMap dateMap) {
+        searchDirectoryKey_ = searchDirectoryKey;
         dateMap_ = dateMap;
     }
 
 
     private String searchDirectory_;
+    private String searchDirectoryKey_;
+
     private TradingDateMap dateMap_;
 
     // TODO: make configurable
@@ -75,7 +85,7 @@ public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<
                     throw new ParseException("All lines must have exactly 2 fields", 0);
                 }
                 date = Integer.parseInt(fields[0]);
-                date = dateMap_.asTradingDate(date, forceNextDate_());
+                date = dateMap_.asTradingDate(date, dateSearchType_());
                 if (date == null) {
                     continue;
                 }
@@ -92,6 +102,6 @@ public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<
 
 
     protected abstract V parseValue_(String value);
-    protected abstract boolean forceNextDate_();
+    protected abstract TradingDateMap.DateSearchType dateSearchType_();
     protected abstract DateTimeSeries<V> createTimeSeries_(String name);
 }

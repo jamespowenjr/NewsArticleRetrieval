@@ -16,8 +16,8 @@ public class PriceTimeSeriesFileLoader extends TimeSeriesFileLoader<Double> {
     }
 
     @Override
-    protected boolean forceNextDate_() {
-        return false;
+    protected TradingDateMap.DateSearchType dateSearchType_() {
+        return TradingDateMap.DateSearchType.ExactOnly;
     }
 
     @Override

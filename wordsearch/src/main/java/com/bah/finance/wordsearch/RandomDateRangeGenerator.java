@@ -11,8 +11,16 @@ public class RandomDateRangeGenerator implements DateRangeGenerator {
 
     @Override
     public void configure(Properties props) throws PropertyException {
-        startDate_ = Utils.getConfigInt(props, START_DATE_KEY_);
-        endDate_ = Utils.getConfigInt(props, END_DATE_KEY_);
+        Integer startDate = dateMap_.asTradingDate(Utils.getConfigInt(props, START_DATE_KEY_), TradingDateMap.DateSearchType.Next);
+        Integer endDate = dateMap_.asTradingDate(Utils.getConfigInt(props, END_DATE_KEY_), TradingDateMap.DateSearchType.Previous);
+
+        if (startDate == null || endDate == null) {
+            throw new PropertyException("Invalid date range-- no results will be found");
+        }
+
+        startDate_ = startDate;
+        endDate_ = endDate;
+
         minLength_ = Utils.getConfigInt(props, MIN_LENGTH_KEY_, DEFAULT_MIN_LENGTH_);
         maxLength_ = Utils.getConfigInt(props, MAX_LENGTH_KEY_, DEFAULT_MAX_LENGTH_);
     }
@@ -34,11 +42,13 @@ public class RandomDateRangeGenerator implements DateRangeGenerator {
         }
     }
 
-    public RandomDateRangeGenerator() {
+    public RandomDateRangeGenerator(TradingDateMap dateMap) {
+        dateMap_ = dateMap;
         random_ = new Random();
     }
 
-    private Random random_;
+    private final TradingDateMap dateMap_;
+    private final Random random_;
 
     // Configuration settings
     private int startDate_;

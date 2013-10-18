@@ -23,9 +23,9 @@ public class TradingDateMapTest {
     public void testAsTradingDate() throws Exception {
         Assert.assertEquals((long) 0, (long) dateMap_.asTradingDate(19930101));
         Assert.assertEquals((long)5359, (long)dateMap_.asTradingDate(20130725));
-        Assert.assertEquals((long)5327, (long)dateMap_.asTradingDate(20130608, true));
-        Assert.assertNull(dateMap_.asTradingDate(20130608, false));
-        Assert.assertNull(dateMap_.asTradingDate(999999999, true));
+        Assert.assertEquals((long)5327, (long)dateMap_.asTradingDate(20130608, TradingDateMap.DateSearchType.Next));
+        Assert.assertNull(dateMap_.asTradingDate(20130608, TradingDateMap.DateSearchType.ExactOnly));
+        Assert.assertNull(dateMap_.asTradingDate(999999999, TradingDateMap.DateSearchType.Next));
     }
 
     @Test

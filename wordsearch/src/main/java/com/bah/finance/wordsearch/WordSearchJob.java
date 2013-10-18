@@ -23,8 +23,6 @@ public class WordSearchJob implements Runnable, Configurable {
         minBagSize_ = Utils.getConfigInt(props, MIN_BAG_SIZE_KEY_, DEFAULT_MIN_BAG_SIZE_);
         maxBagSize_ = Utils.getConfigInt(props, MAX_BAG_SIZE_KEY_, DEFAULT_MAX_BAG_SIZE_);
         minWordTotal_ = Utils.getConfigInt(props, MIN_WORD_TOTAL_KEY_, DEFAULT_MIN_WORD_TOTAL_);
-
-        dateRangeGenerator_.configure(props);
     }
 
     @Override
@@ -35,6 +33,7 @@ public class WordSearchJob implements Runnable, Configurable {
                 oneIteration_();
                 ++completedIterations_;
             } catch (Exception e) {
+                System.err.println("error");
                 logger_.error(e.getMessage());
             }
         }
@@ -44,11 +43,6 @@ public class WordSearchJob implements Runnable, Configurable {
     public WordSearchJob(WordSearchContext context) {
         context_ = context;
         totalWords_ = context_.getAllWords().length;
-        try {
-            dateRangeGenerator_ = context.getDateRangeGenerator().newInstance();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid date range generator class");
-        }
     }
     
     
@@ -59,7 +53,6 @@ public class WordSearchJob implements Runnable, Configurable {
 
     private WordSearchContext context_;
     private final int totalWords_;
-    private DateRangeGenerator dateRangeGenerator_;
     private final Random random_ = new Random();
 
     private final static Logger logger_ = Logger.getLogger(WordSearchJob.class);
@@ -96,7 +89,7 @@ public class WordSearchJob implements Runnable, Configurable {
 
 
     private void oneIteration_() throws Exception {
-        Range<Integer> timeRange = dateRangeGenerator_.getDateRange();
+        Range<Integer> timeRange = context_.getDateRangeGenerator().getDateRange();
         String[] wordBag = getWordBag_();
         List<DateTimeSeries<Integer>> wordSeries = new ArrayList<DateTimeSeries<Integer>>(wordBag.length);
         for (String word : wordBag) {
