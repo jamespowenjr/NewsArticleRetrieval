@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.SortedMap;
 
 // TODO: Because this will be called by multiple threads, in future implementations we might want to
 // have the collect method place matches onto a queue and have a separate thread polling and writing those
@@ -28,7 +29,10 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
             builder.append(series.getName()).append('*');
 
             int wordCount = 0;
-            for (Map.Entry<Integer, Integer> entry : series.getValues().subMap(result.getTimeframe().start, result.getTimeframe().end + 1).entrySet()) {
+            SortedMap<Integer, Integer> subSeries =
+                    series.getValues().subMap(result.getTimeframe().getStart(), result.getTimeframe().getEnd()+ 1);
+
+            for (Map.Entry<Integer, Integer> entry : subSeries.entrySet()) {
                 wordCount += entry.getValue();
             }
             builder.append(wordCount);
@@ -36,8 +40,8 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
         builder.append(',');
 
         builder.append(result.getEquity()).append(',');
-        builder.append(dateMap_.asRealDate(result.getTimeframe().start)).append(',');
-        builder.append(dateMap_.asRealDate(result.getTimeframe().end)).append(',');
+        builder.append(dateMap_.asRealDate(result.getTimeframe().getStart())).append(',');
+        builder.append(dateMap_.asRealDate(result.getTimeframe().getEnd())).append(',');
         builder.append(result.getPValue()).append('\n');
 
         try {

@@ -16,19 +16,19 @@ public abstract class DateTimeSeries<V> extends TimeSeries<Integer, V> {
             }
         }
 
-        if (timeRange.start >= timeRange.end) {
+        if (timeRange.getStart() >= timeRange.getEnd()) {
             return new ArrayList<V>(0);
         }
 
-        int listSize = timeRange.end - timeRange.start + 1;
+        int listSize = timeRange.getEnd() - timeRange.getStart() + 1;
 
         List<V> list = new ArrayList<V>();
         for (int i = 0 ; i < listSize ; ++i) {
             list.add(defaultValue_());
         }
 
-        for (Map.Entry<Integer, V> entry : getValues().subMap(timeRange.start, timeRange.end + 1).entrySet()) {
-            list.set(entry.getKey() - timeRange.start, entry.getValue());
+        for (Map.Entry<Integer, V> entry : getValues().subMap(timeRange.getStart(), timeRange.getEnd()+ 1).entrySet()) {
+            list.set(entry.getKey() - timeRange.getStart(), entry.getValue());
         }
 
         return list;

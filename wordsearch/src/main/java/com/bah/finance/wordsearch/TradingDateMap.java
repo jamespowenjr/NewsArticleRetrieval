@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import java.io.*;
+import java.util.Map;
 
 public class TradingDateMap {
 
@@ -58,6 +59,11 @@ public class TradingDateMap {
             map_.put(date, lineNumber++);
             maxValue_ = date;
         }
+    }
+
+
+    public Map<Integer, Integer> getMap() {
+        return map_;
     }
 
 

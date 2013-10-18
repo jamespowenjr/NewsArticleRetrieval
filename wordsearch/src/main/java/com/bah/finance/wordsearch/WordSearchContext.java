@@ -2,6 +2,12 @@ package com.bah.finance.wordsearch;
 
 public class WordSearchContext {
 
+    // TODO: If we reach a point where the cache will have continuous turnover, it may be worth using a separate
+    // cache for each thread and using some kind of strategy to reduce turnover, such as having each thread pick
+    // a subset of words equal to the size of the cache, and picking a number of sub-subsets of that before
+    // moving on to a new subset.  This obviously sacrifices a degree of randomness, but it would greatly increase
+    // overall throughput.
+
     public MemoryCache<DateTimeSeries<Double>> getPricesCache() {
         return pricesCache_;
     }
@@ -42,9 +48,18 @@ public class WordSearchContext {
         dateMap_ = dateMap;
     }
 
+    public Class<? extends DateRangeGenerator> getDateRangeGenerator() {
+        return dateRangeGenerator_;
+    }
+
+    public void setDateRangeGenerator(Class<? extends DateRangeGenerator> clazz) {
+        dateRangeGenerator_ = clazz;
+    }
+
     private MemoryCache<DateTimeSeries<Double>> pricesCache_;
     private MemoryCache<DateTimeSeries<Integer>> wordsCache_;
     private String[] allWords_;
     private ResultCollector<WordMatch> collector_;
     private TradingDateMap dateMap_;
+    private Class<? extends DateRangeGenerator> dateRangeGenerator_;
 }
