@@ -1,5 +1,8 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
+import com.bah.finance.wordsearch.util.Range;
+
 import java.util.List;
 
 public class WordMatch {

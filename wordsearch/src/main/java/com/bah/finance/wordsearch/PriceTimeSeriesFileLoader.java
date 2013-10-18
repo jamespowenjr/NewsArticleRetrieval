@@ -1,5 +1,8 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
+import com.bah.finance.wordsearch.timeseries.PriceTimeSeries;
+
 public class PriceTimeSeriesFileLoader extends TimeSeriesFileLoader<Double> {
 
     public PriceTimeSeriesFileLoader(String searchDirectory, TradingDateMap dateMap) {

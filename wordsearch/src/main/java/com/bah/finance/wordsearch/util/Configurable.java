@@ -1,4 +1,6 @@
-package com.bah.finance.wordsearch;
+package com.bah.finance.wordsearch.util;
+
+import com.bah.finance.wordsearch.util.PropertyException;
 
 import java.util.Properties;
 

@@ -1,5 +1,6 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 

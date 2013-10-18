@@ -1,5 +1,7 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
+import com.bah.finance.wordsearch.util.Range;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

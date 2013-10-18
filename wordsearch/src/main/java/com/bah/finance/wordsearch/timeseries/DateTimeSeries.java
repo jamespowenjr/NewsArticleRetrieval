@@ -1,4 +1,6 @@
-package com.bah.finance.wordsearch;
+package com.bah.finance.wordsearch.timeseries;
+
+import com.bah.finance.wordsearch.util.Range;
 
 import java.util.ArrayList;
 import java.util.List;

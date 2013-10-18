@@ -1,5 +1,8 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
+import com.bah.finance.wordsearch.util.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.bah.finance.wordsearch;
+package com.bah.finance.wordsearch.util;
 
 public class PropertyException extends Exception {
 

@@ -1,4 +1,4 @@
-package com.bah.finance.wordsearch;
+package com.bah.finance.wordsearch.timeseries;
 
 public class CountTimeSeries extends DateTimeSeries<Integer> {
 

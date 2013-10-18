@@ -1,5 +1,7 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.timeseries.DateTimeSeries;
+
 public class WordSearchContext {
 
     // TODO: If we reach a point where the cache will have continuous turnover, it may be worth using a separate

@@ -1,5 +1,9 @@
 package com.bah.finance.wordsearch;
 
+import com.bah.finance.wordsearch.util.PropertyException;
+import com.bah.finance.wordsearch.util.Range;
+import com.bah.finance.wordsearch.util.Utils;
+
 import java.util.Properties;
 import java.util.Random;
 
