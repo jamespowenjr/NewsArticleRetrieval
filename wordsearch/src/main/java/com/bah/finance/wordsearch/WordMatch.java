@@ -30,8 +30,8 @@ public class WordMatch {
         pValue_ = pValue;
     }
 
-    private List<DateTimeSeries<Integer>> words_;
-    private String equity_;
-    private Range<Integer> timeframe_;
-    private double pValue_;
+    private final List<DateTimeSeries<Integer>> words_;
+    private final String equity_;
+    private final Range<Integer> timeframe_;
+    private final double pValue_;
 }

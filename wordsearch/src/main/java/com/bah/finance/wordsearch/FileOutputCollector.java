@@ -69,7 +69,7 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
     }
 
 
-    public void finalize() {
+    public void finalize() throws Throwable {
         if (stream_ != null) {
             try {
                 stream_.close();
@@ -77,6 +77,7 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
 
             }
         }
+        super.finalize();
     }
 
 
@@ -85,7 +86,7 @@ public class FileOutputCollector implements ResultCollector<WordMatch> {
     }
 
     private FileOutputStream stream_;
-    private TradingDateMap dateMap_;
+    private final TradingDateMap dateMap_;
 
     private static final String OUTPUT_PATH_KEY_ = "data.output_path";
     private static final String DEFAULT_OUTPUT_PATH_ = "output.txt";

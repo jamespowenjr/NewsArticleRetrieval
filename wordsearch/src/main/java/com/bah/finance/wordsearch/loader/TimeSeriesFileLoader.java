@@ -50,9 +50,8 @@ public abstract class TimeSeriesFileLoader<V> extends FileLoader<DateTimeSeries<
 
 
     private String searchDirectory_;
-    private String searchDirectoryKey_;
-
-    private TradingDateMap dateMap_;
+    private final String searchDirectoryKey_;
+    private final TradingDateMap dateMap_;
 
     // TODO: make configurable
     private final static String FILE_EXTENSION_ = "txt";

@@ -24,7 +24,7 @@ public class TradingDateMap implements Configurable {
     }
 
 
-    public enum DateSearchType { ExactOnly, Next, Previous };
+    public enum DateSearchType { ExactOnly, Next, Previous }
 
 
     public Integer asTradingDate(int date) {
@@ -120,7 +120,7 @@ public class TradingDateMap implements Configurable {
         loadFromFile(file);
     }
 
-    private BiMap<Integer, Integer> map_;
+    private final BiMap<Integer, Integer> map_;
     private Integer minValue_;
     private Integer maxValue_;
 

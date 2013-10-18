@@ -36,8 +36,8 @@ public class MemoryCache<T> implements Configurable {
     }
 
 
-    private Map<String, T> cache_;
-    private Loader<T, String> loader_;
+    private final Map<String, T> cache_;
+    private final Loader<T, String> loader_;
 
     private int maxSize_;
     private final static String MAX_SIZE_KEY_ = "cache.max_size";

@@ -19,7 +19,7 @@ public class Range<T extends Comparable<T>> {
         end_ = end;
     }
 
-    private T start_;
-    private T end_;
+    private final T start_;
+    private final T end_;
 
 }
